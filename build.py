@@ -277,6 +277,14 @@ def main():
     (DIST / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}{BASE_PATH}/sitemap.xml\n", encoding="utf-8")
     (DIST / ".nojekyll").write_text("", encoding="utf-8")
 
+    # Archivos estáticos: verificación de Google (google*.html) y todo lo que pongas en static/
+    estaticos = list(Path(".").glob("google*.html"))
+    if Path("static").is_dir():
+        estaticos += list(Path("static").glob("*"))
+    for archivo in estaticos:
+        if archivo.is_file():
+            shutil.copy(archivo, DIST / archivo.name)
+
     print(f"Listo: {len(filas)} páginas de contenido, {len(rutas) + 1} archivos HTML en dist/")
 
 
